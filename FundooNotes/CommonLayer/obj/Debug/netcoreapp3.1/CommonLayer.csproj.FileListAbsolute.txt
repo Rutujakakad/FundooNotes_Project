@@ -1,0 +1,9 @@
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\bin\Debug\netcoreapp3.1\CommonLayer.deps.json
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\bin\Debug\netcoreapp3.1\CommonLayer.dll
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\bin\Debug\netcoreapp3.1\CommonLayer.pdb
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\obj\Debug\netcoreapp3.1\CommonLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\obj\Debug\netcoreapp3.1\CommonLayer.AssemblyInfoInputs.cache
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\obj\Debug\netcoreapp3.1\CommonLayer.AssemblyInfo.cs
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\obj\Debug\netcoreapp3.1\CommonLayer.csproj.CoreCompileInputs.cache
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\obj\Debug\netcoreapp3.1\CommonLayer.dll
+C:\Users\GAURAV KAKAD\OneDrive\Desktop\C#WebAPI\FundooNotes\CommonLayer\obj\Debug\netcoreapp3.1\CommonLayer.pdb
