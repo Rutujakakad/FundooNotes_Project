@@ -118,10 +118,10 @@ namespace RepositoryLayer.Services
             //var result = funDooDbContext.Users.FirstOrDefault(user => user.Email == email);
             //return (result != null) ? true: false;
 
-            //UserEntity user = fundooDBContext.Users.ToList().Find(user => user.Email == email);
+            UserEntity user = context.Users.ToList().Find(user => user.Email == email);
 
-            UserEntity user = GetUserByEmail(email);
-            if (user == null)
+            //bool user = MailExist(email);
+            if (user != null)
             {
                 ForgotPasswordModel forgotPasswordModel = new ForgotPasswordModel();
                 forgotPasswordModel.UserId = user.UserID;
@@ -134,6 +134,22 @@ namespace RepositoryLayer.Services
                 throw new Exception("User Not Exist for requested email !!!");
             }
             
+        }
+
+        public bool ResetPassword (string email, ResetPasswordModel resetPasswordModel)
+        {
+            UserEntity user = context.Users.ToList().Find(user => user.Email == email);
+            if (user != null)
+            {
+                user.Password = EncodePassword(resetPasswordModel.Password);
+                context.SaveChanges();
+                return true;
+
+            }
+            else
+            {
+                throw new Exception("User Not Exist for requested email!!!");
+            }
         }
 
 
