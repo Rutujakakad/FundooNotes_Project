@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using CommonLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Context;
@@ -33,8 +34,8 @@ namespace RepositoryLayer.Services
             users.FirstName = model.FirstName;
             users.LastName = model.LastName;
             users.DOB = model.DOB;
+            users.Gender = model.Gender;
             users.Email = model.Email;
-            users.Password =model.Password;
             users.Password = EncodePassword(model.Password);//method calling
             context.Users.Add(users);
             context.SaveChanges();
@@ -54,33 +55,34 @@ namespace RepositoryLayer.Services
 
         public bool MailExist(string email)
         {
-            if (email == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return context.Users.Any(u => u.Email == email);
+            //if (email != null)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
-        public string LoginEmailPassword(string email, string password)
-        {
-            if (!MailExist(email))
-            {
+        //public string LoginEmailPassword(string email, string password)
+        //{
+        //    if (!MailExist(email))
+        //    {
 
-                return null;
-            }
-            if (password == null)
-            {
-                return null;
-            }
-            if (MailExist(email))
-            {
-                return "Login Successful";
-            }
-            return email;
-        }  
+        //        return null;
+        //    }
+        //    if (password == null)
+        //    {
+        //        return null;
+        //    }
+        //    if (MailExist(email))
+        //    {
+        //        return "Login Successful";
+        //    }
+        //    return email;
+        //}  
         
         private string GenerateJWTToken(string email, int userID)
         {
@@ -104,8 +106,8 @@ namespace RepositoryLayer.Services
 
         public string Login(LoginModel login) 
         {
-            var Checkmail = this.context.Users.FirstOrDefault(a => a.Email == login.Email && a.Password == login.Password);
-            if (Checkmail == null)
+            var Checkmail = this.context.Users.FirstOrDefault(a => a.Email == login.Email && a.Password == EncodePassword(login.Password));
+            if (Checkmail != null)
             {
                 string token = GenerateJWTToken(Checkmail.Email, Checkmail.UserID);//pass the parameter as you have passed in GenerateJWTToken otherwise it will give error
                 return token;
