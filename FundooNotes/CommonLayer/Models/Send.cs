@@ -11,7 +11,7 @@ namespace CommonLayer.Models
         public string ToEmail {  get; set; }
         public string Token {  get; set; }
 
-        public string SendMail(string ToEMail, string Token)
+        public string SendMail(string ToEmail, string Token)
         {
             string FromEmail = "rutujakakad10@gmail.com";
             MailMessage message = new MailMessage(FromEmail, ToEmail);
@@ -22,14 +22,14 @@ namespace CommonLayer.Models
             message.IsBodyHtml = true;
 
             SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-            NetworkCredential credential = new NetworkCredential("rutujakakad10@gmail.com", "ryxx rpox romc smwl");
+            NetworkCredential credential = new NetworkCredential("rutujakakad10@gmail.com", "tkilfhdexrogvxhs");
 
             smtpClient.EnableSsl = true;
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = credential;
 
             smtpClient.Send(message);
-            return ToEMail;
+            return ToEmail;
         }
     }
 }
