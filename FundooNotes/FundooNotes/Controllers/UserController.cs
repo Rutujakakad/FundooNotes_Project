@@ -16,7 +16,7 @@ namespace FundooNotes.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : ControllerBase //ControllerBase is used for OK and BadRequest
     {
         private readonly IUserManager manager;
         private readonly IBus _bus;
@@ -39,7 +39,7 @@ namespace FundooNotes.Controllers
                 var checkMail = manager.MailExist(model.Email);
                 if (checkMail)
                 {
-                    return BadRequest(new ResponseModel<bool> { Success = true, Message = "Mail Exist", Data = true });
+                    return BadRequest(new ResponseModel<bool> { Success = true, Message = "Mail already Exist", Data = false });
                 }
                 else
                 {
@@ -50,7 +50,7 @@ namespace FundooNotes.Controllers
                     }
                     else
                     {
-                        return BadRequest(new ResponseModel<UserEntity> { Success = false, Message = "Register failed" });
+                        return BadRequest(new ResponseModel<UserEntity> { Success = false, Message = "Register failed"});
                     }
                 }
             }
@@ -74,7 +74,7 @@ namespace FundooNotes.Controllers
         public IActionResult Login(LoginModel login)
         {
             var loginPage = manager.Login(login);//calling the login method ()
-            if (login != null)
+            if (loginPage != null)
             {
                return Ok(new ResponseModel<string> { Success = true, Message = "Login is successful", Data = loginPage });
             }
@@ -107,10 +107,11 @@ namespace FundooNotes.Controllers
         [Authorize]
         [HttpPost]
         [Route("ResetPassword")]
-        public IActionResult ResetPassword(string Email, ResetPasswordModel resetPasswordModel)
+        public IActionResult ResetPassword(ResetPasswordModel resetPasswordModel)
         {
             try
             {
+                string Email = User.FindFirstValue("Email");
                 if(resetPasswordModel.Password == resetPasswordModel.ConfirmPassword)
                 {
                     
