@@ -11,7 +11,7 @@ namespace ManagerLayer.Interfaces
         
         public UserEntity Registration(RegisterModel model);
         public bool MailExist(string email);
-        public string LoginEmailPassword(string email, string password);
+        //public string LoginEmailPassword(string email, string password);
         public string Login(LoginModel login);
 
         public ForgotPasswordModel ForgotPassword(string email);

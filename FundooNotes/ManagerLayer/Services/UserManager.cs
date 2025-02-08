@@ -28,10 +28,10 @@ namespace ManagerLayer.Services
             return user.MailExist(email);
         }
 
-        public string LoginEmailPassword(string email, string password)
-        {
-            return user.LoginEmailPassword(email, password);
-        }
+        //public string LoginEmailPassword(string email, string password)
+        //{
+        //    return user.LoginEmailPassword(email, password);
+        //}
 
         public string Login(LoginModel login)
         {
