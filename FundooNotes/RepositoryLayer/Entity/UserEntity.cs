@@ -9,6 +9,8 @@ namespace RepositoryLayer.Entity
 {
     public class UserEntity
     {
+        public object DateOfBirth;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserID {  get; set; }

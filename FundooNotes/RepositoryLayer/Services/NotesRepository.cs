@@ -18,7 +18,7 @@ namespace RepositoryLayer.Services
             this.funDooDBContext = funDooDBContext;
         }
 
-        public NotesEntity CreateNote(int UserID, NotesModel notesModel)// add method
+        public NotesEntity CreateNote(int UserID, NotesModel notesModel)// add/POST method:create new data
         {
             NotesEntity notesEntity = new NotesEntity();
             notesEntity.Title = notesModel.Title;
@@ -33,37 +33,33 @@ namespace RepositoryLayer.Services
             return notesEntity;
         }
 
-        public List<NotesEntity> GetNotes(int UserID)
+        public List<NotesEntity> GetNotesByUserID(int UserID)
         {
-            var listOfNotes = funDooDBContext.Notes.Where(x => x.UserID == UserID).ToList();
+            var listOfNotes = funDooDBContext.Notes.Where(note => note.UserID == UserID).ToList();
             return listOfNotes;
         }
 
-        public NotesEntity NotesUpdate(int UserID, UpdateNotesModel updateNotesModel)
+        public NotesEntity NotesUpdate(int NotesId, int UserID, NotesModel notesModel)//PUT method
         {
-            var updateNotes = funDooDBContext.Notes.FirstOrDefault(a =>  a.UserID == UserID);
-            if (updateNotes == null)
-            {
-                updateNotes.UserID = updateNotesModel.UserID;
-                updateNotes.Title = updateNotesModel.Title;
-                updateNotes.Description = updateNotesModel.Description;
+            NotesEntity updateNotes = funDooDBContext.Notes.FirstOrDefault(a =>  a.NotesId == NotesId && a.UserID == UserID);
+            if (updateNotes == null) return null;
+            
+                updateNotes.Title = notesModel.Title;
+                updateNotes.Description = notesModel.Description;
                 updateNotes.UpdateAt = DateTime.Now;
 
                 funDooDBContext.Notes.Update(updateNotes);
                 funDooDBContext.SaveChanges();
 
                 return updateNotes;
-            }
-            else
-            {
-                throw new Exception("UserID Does Not Exist");
-            }
+            
+           
         }
 
-        public bool NotesDelete(int UserID, DeleteNotesModel deleteNotesModel)
+        public bool NotesDelete(int NotesId)
         {
             
-            var existingNotes = funDooDBContext.Notes.FirstOrDefault(n => n.UserID == UserID);
+            var existingNotes = funDooDBContext.Notes.FirstOrDefault(n => n.NotesId == NotesId);
             if (existingNotes == null)
             {
                 return false; 
@@ -74,6 +70,83 @@ namespace RepositoryLayer.Services
 
             return true; 
         }
+
+
+        public bool UpdateAchieveStatus(int NotesId)
+        {
+            var note = funDooDBContext.Notes.FirstOrDefault(a => a.NotesId == NotesId);
+            if (note == null) return false;
+
+            note.IsArchive = !note.IsArchive;
+            note.UpdateAt = DateTime.Now;
+
+            funDooDBContext.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateTogglePinStatus(int NotesId)
+        {
+            var note = funDooDBContext.Notes.FirstOrDefault(f => f.NotesId == NotesId);
+            if (note == null) return false;
+
+            note.IsPin = !note.IsPin;
+            note.UpdateAt = DateTime.Now;
+
+            funDooDBContext.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateTrashStatus(int NotesId)
+        {
+            var note = funDooDBContext.Notes.FirstOrDefault(f => f.NotesId == NotesId);
+            if (note == null) return false;
+
+            note.IsTrash = !note.IsTrash;
+            note.UpdateAt = DateTime.Now;
+
+            funDooDBContext.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateColor(int NotesId, string color)
+        {
+            var notes = funDooDBContext.Notes.FirstOrDefault(n => n.NotesId == NotesId);
+            if (notes == null)
+            {
+                return false;
+            }
+            notes.Color = color;
+            notes.UpdateAt = DateTime.Now;
+            funDooDBContext.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateImage(int NotesId, string image)
+        {
+            var notes = funDooDBContext.Notes.FirstOrDefault(x => x.NotesId == NotesId);
+            if (notes == null)
+            {
+                return false;
+            }
+            notes.Image = image;
+            notes.UpdateAt = DateTime.Now;
+            funDooDBContext.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateReminder(int NotesId, DateTime reminder)
+        {
+            var notes = funDooDBContext.Notes.FirstOrDefault(y => y.NotesId == NotesId);
+            if (notes == null)
+            {
+                return false;
+            }
+            notes.Reminder = reminder;
+            notes.UpdateAt = DateTime.Now;
+            funDooDBContext.SaveChanges();
+            return true;
+        }
+
 
     }
 

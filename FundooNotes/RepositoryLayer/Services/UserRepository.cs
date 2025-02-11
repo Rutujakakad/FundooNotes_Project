@@ -27,7 +27,7 @@ namespace RepositoryLayer.Services
             this.configuration = configuration;
         }
 
-        //every method we create in Repository, we have to pass it in the interface of Repository
+        //every method we create in Repository, we  have to pass it in the interface of Repository
         public UserEntity Registration(RegisterModel model)// register method
         {
             UserEntity users = new UserEntity();
