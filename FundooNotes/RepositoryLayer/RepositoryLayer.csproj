@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20250211095435_Users.cs" />
+    <Compile Remove="Migrations\20250211095435_Users.Designer.cs" />
+    <Compile Remove="Migrations\20250211095635_Notes.cs" />
+    <Compile Remove="Migrations\20250211095635_Notes.Designer.cs" />
+    <Compile Remove="Migrations\20250211095714_Labels.cs" />
+    <Compile Remove="Migrations\20250211095714_Labels.Designer.cs" />
+    <Compile Remove="Migrations\20250211101752_Labels.cs" />
+    <Compile Remove="Migrations\20250211101752_Labels.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
