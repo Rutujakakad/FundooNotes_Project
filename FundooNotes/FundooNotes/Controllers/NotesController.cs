@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using CommonLayer.Models;
+using GreenPipes.Caching;
 using ManagerLayer.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interfaces;
-using RepositoryLayer.Migrations;
+//using RepositoryLayer.Migrations;
 
 namespace FundooNotes.Controllers
 {
@@ -21,19 +25,22 @@ namespace FundooNotes.Controllers
     {
         private readonly INotesManager notesManager;
         private readonly ILogger<NotesController> logger;
-        // private readonly IDistributedCache distributedCache;
-        // private readonly FundooDBContext funDooDBContext;
+        private readonly IDistributedCache distributedCache;
+        private readonly FundooDBContext funDooDBContext;
+        private readonly IDistributedCache _cache;
+        //private readonly object distributedCache;
 
-        public NotesController(INotesManager notesManager, ILogger<NotesController> logger)
+        public NotesController(INotesManager notesManager, ILogger<NotesController> logger, IDistributedCache distributedCache, IDistributedCache _cache, FundooDBContext funDooDBContext )
         {
             this.notesManager = notesManager;
             this.logger = logger;
-            //this.distributedCache = distributedCache;
-            //this.funDooDBContext = funDooDBContext;
+            this.distributedCache = distributedCache;
+            this._cache = _cache;
+            this.funDooDBContext = funDooDBContext;
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost] 
         [Route("createNote")]
         public IActionResult CreateNote(NotesModel notesModel)// here we are only passing the notesModel not the UserID because USerID id fetch from the token
         {
@@ -98,6 +105,7 @@ namespace FundooNotes.Controllers
                 if (notes != null)
                 {
                     //throw new Exception("Error Occured");
+                    logger.LogInformation("NoteUpdated");
                     return Ok(new { Success = true, Message = "Notes updated successfully", Data = notes });
                 }
                 else
@@ -107,7 +115,7 @@ namespace FundooNotes.Controllers
             }
             catch (Exception ex)
             {
-                //logger.LogError(ex.ToString());
+                logger.LogError(ex.ToString());
                 return BadRequest(new ResponseModel<string> { Success = false, Message = "Error Occured", Data = ex.Message }); //throw ex;
             }
         }
@@ -190,7 +198,7 @@ namespace FundooNotes.Controllers
         {
             try
             {
-                bool result = notesManager.UpdateTrashStatus(NotesId);
+                var result = notesManager.UpdateTrashStatus(NotesId);
                 if (!result)
                 {
                     return BadRequest(new ResponseModel<bool> { Success = false, Message = "Note not found", Data = result });
@@ -279,12 +287,38 @@ namespace FundooNotes.Controllers
 
         }
 
+        [HttpGet("Redis")]
+        public async Task<IActionResult> GetAllNotesUsingRedisCache()
+        {
+            var cacheKey = "NotesList";
+            string SerializedNotesList;
+            var NotesList = new List<NotesEntity>();
+            //var RedisNotesList = await DistributedCacheEntryExtensions.GetAsync(cacheKey);
+            var RedisNotesList = await _cache.GetAsync(cacheKey);
+            if (RedisNotesList != null)
+            {
+                SerializedNotesList = Encoding.UTF8.GetString(RedisNotesList);
+                NotesList = JsonConvert.DeserializeObject<List<NotesEntity>>(SerializedNotesList);
+            }
+            else
+            {
+                NotesList = funDooDBContext.Notes.ToList();
+                SerializedNotesList = JsonConvert.SerializeObject(NotesList);
+                RedisNotesList = Encoding.UTF8.GetBytes(SerializedNotesList);
+                var options = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(20))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+                await distributedCache.SetAsync(cacheKey, RedisNotesList, options);
+            }
+            return Ok(NotesList);
+        }
+
 
 
 
 
     }
-    //----------------------------------------------------------------------------------
+    //----------------------------------------------------Review Session++++++++++++++++++++
 
 
     //[HttpGet]

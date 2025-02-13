@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
-using RepositoryLayer.Migrations;
+//using RepositoryLayer.Migrations;
 
 namespace FundooNotes.Controllers
 {

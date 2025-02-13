@@ -37,7 +37,7 @@ namespace FundooNotes
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)//, IConfiguration configuration)// added IConfiguration for RedisCache
         {
             services.AddControllers();
             services.AddDbContext<FundooDBContext>(a => a.UseSqlServer(Configuration["ConnectionStrings:DBConnection"]));
@@ -46,6 +46,12 @@ namespace FundooNotes
 
             services.AddTransient<INotesRepository, NotesRepository>();// for Notes
             services.AddTransient<INotesManager, NotesManager>();// for Notes
+            services.AddTransient<ILabelManager, LabelManager>();// for label
+            services.AddTransient<ILabelRepository, LabelRepository>();
+            services.AddTransient<ICollaboratorManager, CollaboratorManager>();// for collaborator
+            services.AddTransient<ICollaboratorRepository, CollaboratorRepository>();
+
+            services.AddStackExchangeRedisCache(options => { options.Configuration = Configuration["RedisCacheUrl"]; });// added for RedisCache
 
             services.AddSwaggerGen(c =>
             {
