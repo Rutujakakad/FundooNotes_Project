@@ -49,7 +49,7 @@ namespace ManagerLayer.Services
 
         public bool UpdateTrashStatus(int NotesId)
         {
-            return UpdateTrashStatus(NotesId);
+            return notes.UpdateTrashStatus(NotesId);
         }
 
         public bool UpdateColor(int NotesId, string color)
